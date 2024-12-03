@@ -63,6 +63,7 @@ export interface IClass {
   availableSlot: string;
   location: string;
   room: string;
+  price: string;
   date: string;
   timeFrom: string;
   timeTo: string;

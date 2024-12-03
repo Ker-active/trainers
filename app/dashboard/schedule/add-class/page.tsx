@@ -78,6 +78,8 @@ export default function Page() {
       form.reset({
         ...classDetails.data,
         availableSlot: classDetails.data.availableSlot.toString(),
+        price: classDetails.data.price.toString(),
+        room: classDetails.data.room.toString(),
         classType: "CLASS",
       });
     }
