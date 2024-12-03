@@ -3,7 +3,6 @@ import { z } from "zod";
 export const AddClassSchema = z.object({
   title: z.string().min(1, { message: "Required" }),
   type: z.string().min(1, { message: "Required" }),
-  trainer: z.string().min(1, { message: "Required" }),
   availableSlot: z.string().min(1, { message: "Required" }),
   location: z.string().min(1, { message: "Required" }),
   room: z.string().min(1, { message: "Required" }),
@@ -15,7 +14,7 @@ export const AddClassSchema = z.object({
   free: z.boolean(),
   description: z.string().min(1, { message: "Required" }),
   media: z.any(),
-  classType: z.enum(["class", "individual"], {
+  classType: z.enum(["CLASS", "INDIVIDUAL TRAINING"], {
     required_error: "You need to select a class type",
   }),
 });

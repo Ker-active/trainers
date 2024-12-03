@@ -55,7 +55,7 @@ export default function Signup() {
         }
         if (response.success) {
           toast.success(response.success);
-          router.replace(Routes.home);
+          router.replace(Routes.login);
         }
       });
     });

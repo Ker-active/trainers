@@ -2,7 +2,6 @@
 "use client";
 
 import { FormCheckBox, FormDate, FormInput, FormMedia, FormSelect } from "@/components/forms";
-import { FormReactSelect } from "@/components/forms/form-react-select";
 import { Button } from "@/components/ui/button";
 import { Form, FormLabel } from "@/components/ui/form";
 import { useGetClassDetails, useGetTrainers, useGetUser } from "@/hooks/shared";
@@ -15,7 +14,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, ChevronDown } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "nextjs-toploader/app";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -27,27 +26,19 @@ export default function Page() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
-  const { data } = useGetTrainers();
   const { data: userData } = useGetUser();
   const [classType, setClassType] = useState("class");
   const form = useForm<TClassSchema>({
     resolver: zodResolver(AddClassSchema),
     mode: "onBlur",
     defaultValues: {
+      classType: "CLASS",
       free: false,
       media: [],
     },
   });
   const classId = searchParams.get("classId");
   const { data: classDetails } = useGetClassDetails(classId);
-
-  const trainersOptions = useMemo(() => {
-    if (!data?.data) return [];
-    return data.data.map((trainer) => ({
-      value: trainer._id,
-      label: trainer.fullname,
-    }));
-  }, [data?.data]);
 
   function onSubmit(values: TClassSchema) {
     if (form.getValues("media").length == 0) return toast.error("Picture is required");
@@ -57,6 +48,7 @@ export default function Page() {
   const { mutate, isPending } = useMutation({
     mutationFn: (data: TClassSchema) => {
       const formData = new FormData();
+      formData.append("trainer", userData!?.data._id);
       Object.entries(data).forEach(([key, value]) => {
         if (key == "media" && value.every((item: any) => typeof item === "string")) return;
         if (key == "media") {
@@ -82,14 +74,14 @@ export default function Page() {
   });
 
   useEffect(() => {
-    if (classDetails) {
+    if (classDetails && userData) {
       form.reset({
         ...classDetails.data,
-        classType: "class",
-        trainer: classDetails.data.trainer._id,
+        availableSlot: classDetails.data.availableSlot.toString(),
+        classType: "CLASS",
       });
     }
-  }, [classDetails]);
+  }, [classDetails, userData]);
 
   return (
     <section className="flex flex-col  font-inter gap-10">
@@ -107,12 +99,12 @@ export default function Page() {
               <PopoverArrow />
               <RadioGroup className="space-y-2" defaultValue={classType} onValueChange={setClassType}>
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="class" id="r1" />
+                  <RadioGroupItem value="CLASS" id="r1" />
                   <Label htmlFor="r1">Class</Label>
                 </div>
                 <hr />
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="individial" id="r2" />
+                  <RadioGroupItem value="INDIVIDUAL TRAINING" id="r2" />
                   <Label htmlFor="r2">Individual Training</Label>
                 </div>
               </RadioGroup>
@@ -120,7 +112,7 @@ export default function Page() {
           </Popover>
         </div>
 
-        <Button disabled={isPending} size="sm">
+        <Button form="form" type="submit" disabled={isPending} size="sm">
           {classId ? "Update Class" : "Add Class"}
         </Button>
       </header>
@@ -128,17 +120,7 @@ export default function Page() {
         <form id="form" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col  bg-white  px-[27px] py-[40px] rounded-[8px] gap-6  ">
           <div className="grid grid-cols-1 gap-[28px] sm:grid-cols-2">
             <FormInput<TClassSchema> placeholder="Example: CrossFit" label="Title" name="title" />
-            <FormSelect<TClassSchema> placeholder="Select" options={userData?.data.activities || []} label="Type" name="type" />
-
-            <FormReactSelect<TClassSchema>
-              handleOnChange={(e) => {
-                form.setValue("trainer", e?.value);
-              }}
-              placeholder="Select"
-              options={trainersOptions}
-              label="Trainer"
-              name="trainer"
-            />
+            <FormSelect<TClassSchema> placeholder="Select" options={userData?.data.services || []} label="Type" name="type" />
 
             <FormInput<TClassSchema> placeholder="Enter" label="Available Slot" name="availableSlot" />
             <FormInput<TClassSchema> placeholder="Enter" label="Location" name="location" />
