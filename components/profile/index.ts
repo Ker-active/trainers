@@ -3,3 +3,4 @@ export * from "./professional-summary";
 export * from "./services";
 export * from "./amenities";
 export * from "./media";
+export * from "./profile-header";

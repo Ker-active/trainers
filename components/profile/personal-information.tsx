@@ -1,8 +1,6 @@
 "use client";
 
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
-import { useFormContext } from "react-hook-form";
-import { Input } from "../ui/input";
+import { FormInput } from "../forms";
 
 const generalFields = [
   {
@@ -28,8 +26,8 @@ interface IProps {
 }
 
 export const PersonalInformation = ({ fields }: IProps) => {
-  const formSchema = useFormContext();
   const newFields = [...generalFields, ...fields];
+
   return (
     <article className="flex bg-white px-[20px] py-[15px] rounded-[8px] flex-col gap-4">
       <header>
@@ -37,22 +35,9 @@ export const PersonalInformation = ({ fields }: IProps) => {
       </header>
       <hr />
       <div className="grid gap-x-4 gap-y-[18px] grid-cols-1 sm:grid-cols-2">
-        {newFields.map((field) => (
-          <FormField
-            key={field.name}
-            control={formSchema.control}
-            name={field.name}
-            render={({ field: formField }) => (
-              <FormItem>
-                <FormLabel>{field.label}</FormLabel>
-                <FormControl>
-                  <Input className=" h-[50px]" {...field} {...formField} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        ))}
+        {newFields.map((field) => {
+          return <FormInput className="h-[50px]" {...field} key={field.name} />;
+        })}
       </div>
     </article>
   );

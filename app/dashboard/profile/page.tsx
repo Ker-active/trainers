@@ -7,6 +7,7 @@ import { Form } from "@/components/ui/form";
 import { useGetUser } from "@/hooks/shared";
 import { CacheKeys, cn, showError } from "@/lib";
 import { client } from "@/lib/api";
+import { FormSchemaProvider } from "@/providers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Info } from "lucide-react";
@@ -132,39 +133,41 @@ export default function Page() {
         </Button>
       </header>
       <Form {...form}>
-        <form className="flex flex-col gap-[30px]" id="form" onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="flex flex-col items-stretch gap-[30px] sm:gap-[51px] sm:flex-row">
-            <div className="flex-col w-full flex gap-[30px]">
-              <PersonalInformation
-                fields={[
-                  {
-                    name: "socialMedia.instagram",
-                    label: "Instagram",
-                    placeholder: "Full Instagram URL",
-                  },
-                  {
-                    name: "socialMedia.twitter",
-                    label: "X (twitter)",
-                    placeholder: "Full X URL",
-                  },
-                  {
-                    name: "socialMedia.website",
-                    label: "Website",
-                    placeholder: "https://url.com",
-                  },
-                ]}
-              />
-              <ProfessionalSummary />
+        <FormSchemaProvider schema={schema}>
+          <form className="flex flex-col gap-[30px]" id="form" onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="flex flex-col items-stretch gap-[30px] sm:gap-[51px] sm:flex-row">
+              <div className="flex-col w-full flex gap-[30px]">
+                <PersonalInformation
+                  fields={[
+                    {
+                      name: "socialMedia.instagram",
+                      label: "Instagram",
+                      placeholder: "Full Instagram URL",
+                    },
+                    {
+                      name: "socialMedia.twitter",
+                      label: "X (twitter)",
+                      placeholder: "Full X URL",
+                    },
+                    {
+                      name: "socialMedia.website",
+                      label: "Website",
+                      placeholder: "https://url.com",
+                    },
+                  ]}
+                />
+                <ProfessionalSummary />
+              </div>
+              <div className="sm:max-w-[262px] gap-[30px] flex flex-col sm:min-h-full  w-full">
+                <Photo />
+                <Certification />
+              </div>
             </div>
-            <div className="sm:max-w-[262px] gap-[30px] flex flex-col sm:min-h-full  w-full">
-              <Photo />
-              <Certification />
-            </div>
-          </div>
 
-          <Services />
-          <Media />
-        </form>
+            <Services />
+            <Media />
+          </form>
+        </FormSchemaProvider>
       </Form>
     </section>
   );

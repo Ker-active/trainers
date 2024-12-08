@@ -1,4 +1,4 @@
-import { cn, Routes } from "@/lib";
+import { cn, convert24to12, Routes } from "@/lib";
 import { Clock, User, UserRound } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { FloatingComponent } from "./floating-component";
@@ -33,8 +33,8 @@ function formatClass(classDetails: IClassResponse["data"]) {
     const day = format(new Date(item.date), "EEEE");
     const classDetails = {
       name: item.title,
-      trainer: item.trainer?.fullname, // Get the trainer name
-      time: `${item.timeFrom} - ${item.timeTo}`,
+      trainer: item.trainer?.fullname,
+      time: `${convert24to12(item.timeFrom)} - ${convert24to12(item.timeTo)}`,
       classId: item._id,
       onlineLink: item.onlineLink,
     };

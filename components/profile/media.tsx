@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ChangeEvent } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
+import { ProfileHeader } from "./profile-header";
 
 export const Media = () => {
   const form = useFormContext<TProfile>();
@@ -19,9 +20,7 @@ export const Media = () => {
 
   return (
     <article className="flex bg-white px-[20px] py-[15px] rounded-[8px] flex-col gap-4">
-      <header>
-        <h3 className="text-[#1C1939]  font-medium font-inter">Media</h3>
-      </header>
+      <ProfileHeader title="Media" />
       <hr />
       {medias.length == 0 ? (
         <div className="grid  text-[13px] py-[100px] place-items-center">
