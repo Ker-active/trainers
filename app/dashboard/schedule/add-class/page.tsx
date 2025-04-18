@@ -21,6 +21,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { PopoverArrow } from "@radix-ui/react-popover";
 import { FormSchemaProvider } from "@/providers";
+import AnimateLoadingButton from "@/components/shared/animate-loading-button";
 
 export default function Page() {
   const router = useRouter();
@@ -81,7 +82,7 @@ export default function Page() {
       form.reset({
         ...classDetails.data,
         availableSlot: classDetails.data.availableSlot.toString(),
-        price: classDetails.data?.price.toString(),
+        price: classDetails.data?.price?.toString(),
         room: classDetails.data?.room.toString(),
       });
     }
@@ -119,8 +120,9 @@ export default function Page() {
           </Popover>
         </div>
 
-        <Button form="form" type="submit" disabled={isPending} size="sm">
-          {classId ? "Update Class" : "Add Class"}
+        <Button form="form" type="submit" disabled={isPending} size="sm" className={isPending ? "cursor-not-allowed" : "cursor-pointer"}>
+          {/* {classId ? "Update Class" : "Add Class"} */}
+          {isPending ? <AnimateLoadingButton /> : classId ? "Update Class" : "Add Class"}
         </Button>
       </header>
       <Form {...form}>
@@ -130,9 +132,9 @@ export default function Page() {
               <FormInput<TClassSchema> containerClassName="w-full" placeholder="Example: CrossFit" label="Title" name="title" />
               <FormSelect<TClassSchema> containerClassName="w-full" placeholder="Select" options={userData?.data.services || []} label="Type" name="type" />
 
-              <FormInput<TClassSchema> containerClassName="w-full" placeholder="Enter" label="Available Slot" name="availableSlot" />
+              <FormInput<TClassSchema> containerClassName="w-full" placeholder="Enter" type="number" label="Available Slot" name="availableSlot" />
               <FormInput<TClassSchema> containerClassName="w-full" placeholder="Enter" label="Location" name="location" />
-              <FormInput<TClassSchema> containerClassName="w-full" placeholder="Enter" label="Room" name="room" />
+              <FormInput<TClassSchema> containerClassName="w-full" placeholder="Enter" type="number" label="Room" name="room" />
               <FormDate<TClassSchema> containerClassName="w-full" name="date" />
 
               <div className={cn("flex flex-row gap-4 items-start")}>

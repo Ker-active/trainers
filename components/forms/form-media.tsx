@@ -22,7 +22,13 @@ export const FormMedia = ({ label }: IProps) => {
 
   return (
     <div>
-      {label && <FormLabel>{label}</FormLabel>}
+      {label && (
+        <div className="mb-2">
+          <FormLabel>
+            {label} <span className="text-red-500">*</span>
+          </FormLabel>{" "}
+        </div>
+      )}
       <input multiple accept="image/*" onChange={handleChange} id="media" type="file" hidden />
       <div className="relative border border-dashed min-h-[300px]  w-full rounded-[5px] overflow-hidden">
         {form.watch("media")?.length > 0 ? (
