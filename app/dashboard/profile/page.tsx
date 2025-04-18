@@ -42,12 +42,12 @@ const calculatePercentage = (data: TProfile) => {
   const { personalInformation, socialMedia, services, certification, profilePhoto, media } = data;
 
   const personalInfoComplete = personalInformation?.fullname && personalInformation?.phoneNumber && socialMedia?.instagram && personalInformation?.professionalSummary;
+  // if (profilePhoto) percentage += 20;
 
-  if (personalInfoComplete) percentage += 20;
-  if (profilePhoto) percentage += 20;
-  if (certification) percentage += 20;
-  if (services.length >= 2) percentage += 20;
-  if (media.length >= 2) percentage += 20;
+  if (personalInfoComplete) percentage += 25;
+  if (certification) percentage += 25;
+  if (services.length >= 1) percentage += 25;
+  if (media.length >= 1) percentage += 25;
 
   return percentage;
 };

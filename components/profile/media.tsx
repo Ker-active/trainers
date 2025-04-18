@@ -11,7 +11,7 @@ export const Media = () => {
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const files = e.target.files;
-    if (files && files.length < 2) return toast.error("Please select two or more files");
+    if (files && files.length < 1) return toast.error("Please select at least one file");
     form.setValue("media", [...Array.from(files as any)]);
   }
 

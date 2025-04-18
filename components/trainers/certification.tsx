@@ -17,7 +17,9 @@ export const Certification = () => {
   return (
     <article className="flex h-full bg-white px-[20px] py-[15px] rounded-[8px] flex-col gap-4">
       <header>
-        <h3 className="text-[#1C1939] font-medium font-inter">Certification</h3>
+        <h3 className="text-[#1C1939] font-medium font-inter">
+          Certification<span className="text-red-500">*</span>
+        </h3>
       </header>
       <hr />
       <div className="flex items-center py-4 justify-center flex-col h-full">
