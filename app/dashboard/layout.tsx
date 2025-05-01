@@ -21,7 +21,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useLayoutEffect(() => {
-    if (data && !data.data.location) {
+    if (data && !data.data.fullname) {
       return router.replace(Routes.profile);
     }
   }, [data, pathname]);

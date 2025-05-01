@@ -1,12 +1,16 @@
 "use client";
 
+import { clearCookie } from "@/actions/shared";
 import { useGetUser } from "@/hooks/shared";
 import { Routes } from "@/lib";
 import { cn } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { HTMLAttributes } from "react";
+import { useRouter } from "nextjs-toploader/app";
+
+import { HTMLAttributes, startTransition } from "react";
 
 const links = [
   {
@@ -39,6 +43,10 @@ const links = [
     label: "Profile",
     icon: "/members.svg",
   },
+  {
+    label: "Logout",
+    icon: "/members.svg",
+  },
 ] as const;
 
 interface IProps extends HTMLAttributes<HTMLDivElement> {
@@ -48,6 +56,8 @@ interface IProps extends HTMLAttributes<HTMLDivElement> {
 export const Sidebar = ({ className, setIsSidebarOpen }: IProps) => {
   const pathname = usePathname();
   const { data: userData, isLoading } = useGetUser();
+  const queryClient = useQueryClient();
+  const router = useRouter();
   return (
     <aside className={cn("w-full fixed left-0 overflow-y-auto min-w-[220px] max-w-[220px] h-full bg-white border-r-[0.7px] border-[#DCDCDC]", className)}>
       <ul className={"flex flex-col pt-[44px] gap-10"}>
@@ -61,9 +71,29 @@ export const Sidebar = ({ className, setIsSidebarOpen }: IProps) => {
               {isDisabled ? (
                 <span className="text-[#E1E2E7] text-base cursor-not-allowed">{item.label}</span>
               ) : (
-                <Link onClick={() => setIsSidebarOpen?.(false)} className={cn("text-[#565C78] text-base", pathname.includes(href) && "text-brand font-medium")} href={href}>
-                  {item.label}
-                </Link>
+                <>
+                  {item.label == "Logout" ? (
+                    <button
+                      onClick={() => {
+                        startTransition(async () => {
+                          await clearCookie();
+                          queryClient.clear();
+                          router.replace(Routes.login);
+                        });
+                      }}
+                      className="text-red-500 text-base"
+                    >
+                      {item.label}
+                    </button>
+                  ) : (
+                    <Link onClick={() => setIsSidebarOpen?.(false)} className={cn("text-[#565C78] text-base", pathname.includes(href) && "text-brand font-medium")} href={href}>
+                      {item.label}
+                    </Link>
+                  )}
+                </>
+                // <Link onClick={() => setIsSidebarOpen?.(false)} className={cn("text-[#565C78] text-base", pathname.includes(href) && "text-brand font-medium")} href={href}>
+                //   {item.label}
+                // </Link>
               )}
             </li>
           );

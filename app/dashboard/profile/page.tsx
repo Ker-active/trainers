@@ -14,6 +14,8 @@ import { Info } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { Routes } from "@/lib";
+import { useRouter } from "nextjs-toploader/app";
 import { z } from "zod";
 
 const schema = z.object({
@@ -44,15 +46,22 @@ const calculatePercentage = (data: TProfile) => {
   const personalInfoComplete = personalInformation?.fullname && personalInformation?.phoneNumber && socialMedia?.instagram && personalInformation?.professionalSummary;
   // if (profilePhoto) percentage += 20;
 
-  if (personalInfoComplete) percentage += 25;
-  if (certification) percentage += 25;
-  if (services.length >= 1) percentage += 25;
-  if (media.length >= 1) percentage += 25;
+  // if (personalInfoComplete) percentage += 25;
+  // if (certification) percentage += 25;
+  // if (services.length >= 1) percentage += 25;
+  // if (media.length >= 1) percentage += 25;
+
+  if (personalInfoComplete) percentage += 33.33;
+  if (services.length >= 1) percentage += 33.33;
+  if (media.length >= 1) percentage += 33.34; // To total 100%
+
+  return Math.round(percentage);
 
   return percentage;
 };
 
 export default function Page() {
+  const router = useRouter();
   const { data: userData } = useGetUser();
   const queryClient = useQueryClient();
   const form = useForm<TProfile>({
@@ -98,6 +107,7 @@ export default function Page() {
         queryKey: [CacheKeys.USER],
       });
       toast.success("Profile updated successfully");
+      router.replace(Routes.home);
     },
   });
 
