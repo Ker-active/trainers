@@ -26,18 +26,18 @@ const links = [
     label: "Members",
     icon: "/members.svg",
   },
-  {
-    label: "Reviews",
-    icon: "/reviews.svg",
-  },
+  // {
+  //   label: "Reviews",
+  //   icon: "/reviews.svg",
+  // },
   // {
   //   label: "Messages",
   //   icon: "/message.svg",
   // },
-  {
-    label: "Events",
-    icon: "/calender.svg",
-  },
+  // {
+  //   label: "Events",
+  //   icon: "/calender.svg",
+  // },
 
   {
     label: "Profile",
