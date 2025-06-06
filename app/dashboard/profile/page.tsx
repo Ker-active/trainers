@@ -85,7 +85,7 @@ export default function Page() {
       if (!!data?.certification && typeof data.certification !== "string") formData.append("certification", data.certification);
       if (data.profilePhoto) formData.append("profilePhoto", data.profilePhoto);
 
-      if (!!data.profilePhoto && typeof data.profilePhoto !== "string") formData.append("profilePhoto", data.profilePhoto);
+      // if (!!data.profilePhoto && typeof data.profilePhoto !== "string") formData.append("profilePhoto", data.profilePhoto);
 
       data.services.forEach((service) => {
         formData.append("services", service);
@@ -95,6 +95,8 @@ export default function Page() {
         if (typeof media === "string") return; //for editing, do not append if it is a string
         formData.append("media", media);
       });
+
+      console.log({ formData });
 
       return client.put(`/user/update/${userData?.data._id}`, formData);
     },
@@ -111,6 +113,13 @@ export default function Page() {
     },
   });
 
+  function onSubmit(value: TProfile) {
+    console.log({ value });
+
+    if (form.getValues("media").length === 0) return toast.error("Media is required");
+    mutate(value);
+  }
+
   useEffect(() => {
     if (userData) {
       form.reset({
@@ -125,11 +134,6 @@ export default function Page() {
   }, [userData]);
 
   const percentage = calculatePercentage(form.watch());
-
-  function onSubmit(value: TProfile) {
-    if (form.getValues("media").length === 0) return toast.error("Media is required");
-    mutate(value);
-  }
 
   return (
     <section className="flex flex-col gap-[30px]">
