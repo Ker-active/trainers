@@ -24,9 +24,23 @@ export const Certification = () => {
         <Image width={80} height={80} alt="Certificate Svg" src="/certificate.svg" />
         {/* <DocViewer style={{ background: "white", border: "1px solid #eee" }} documents={[{ uri: source }]} /> */}
         <div className="w-full flex text-[13px] flex-col">
-          <p className=" line-clamp-1 w-full text-center leading-[20px] text-[#5B5971]">
+          {/* <p className=" line-clamp-1 w-full text-center leading-[20px] text-[#5B5971]">
             {certification ? (typeof certification === "string" ? certification : certification.name) : "You do not have any certification yet,"}{" "}
+          </p> */}
+          <p className="line-clamp-1 w-full text-center leading-[20px] text-[#5B5971]">
+            {certification ? (
+              typeof certification === "string" ? (
+                <a href={certification} target="_blank" rel="noopener noreferrer" className="text-primary underline">
+                  View Certification
+                </a>
+              ) : (
+                certification.name
+              )
+            ) : (
+              "You do not have any certification yet,"
+            )}
           </p>
+
           <button onClick={() => document.getElementById("certification")?.click()} type="button" className="text-primary underline">
             {certification ? "Reupload" : "Upload"} Certificate
           </button>
