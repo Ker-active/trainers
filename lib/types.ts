@@ -74,3 +74,18 @@ export interface IClass {
   createdAt: string;
   __v: number;
 }
+
+export interface IMembersResponse {
+  success: boolean;
+  count: number;
+  data: IMember[];
+  message: string;
+}
+
+export interface IMember {
+  totalBookings: number;
+  attendedCount: number;
+  userId: string;
+  fullname: string;
+  email: string;
+}

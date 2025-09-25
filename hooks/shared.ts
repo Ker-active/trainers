@@ -1,6 +1,6 @@
 import { CacheKeys } from "@/lib";
 import { client } from "@/lib/api";
-import { IClass, IClassResponse, IEvent, IEventResponse, TUser } from "@/lib/types";
+import { IClass, IClassResponse, IEvent, IEventResponse, IMember, IMembersResponse, TUser } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 
 export const useGetUser = () => {
@@ -66,5 +66,14 @@ export const useGetEventDetails = (eventId: string | null) => {
       return client.get(`/event/view/${eventId}`).then((res) => res.data as Promise<{ data: IEvent }>);
     },
     enabled: !!eventId,
+  });
+};
+
+export const useGetMembers = () => {
+  return useQuery({
+    queryKey: [CacheKeys.MEMBERS],
+    queryFn: async () => {
+      return client.get("/attendance/stat").then((res) => res.data as Promise<IMembersResponse>);
+    },
   });
 };
