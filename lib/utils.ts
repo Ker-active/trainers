@@ -52,6 +52,7 @@ export enum CacheKeys {
   Events = "events",
   Price = "price",
   Trainers = "trainers",
+  MEMBERS = "members",
   Services_List = "services list",
   Amenities_List = "amenities list",
   SpecialNeeds_List = "Special Needs list",

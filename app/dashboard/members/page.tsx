@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -7,32 +9,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-const invoices = [
-  {
-    date: "02-02-2022",
-    fullName: "John Doe",
-    email: "johndoe@gmail.com",
-    subscriptionType: "Monthly",
-    expiry: "29 days",
-  },
-  {
-    date: "02-02-2022",
-    fullName: "John Doe",
-    email: "johndoe@gmail.com",
-    subscriptionType: "Monthly",
-    expiry: "29 days",
-  },
-  {
-    date: "02-02-2022",
-    fullName: "John Doe",
-    email: "johndoe@gmail.com",
-    subscriptionType: "Monthly",
-    expiry: "29 days",
-  },
-];
+import { useGetMembers } from "@/hooks/shared";
+import { LoadingComponent } from "@/components/shared";
 
 export default function Root() {
+  const { data, isLoading } = useGetMembers();
+  const members = data?.data ?? [];
+
   return (
     <section className='w-full bg-white font-inter'>
       <header className='flex flex-row items-center w-full justify-between px-[20px] py-6'>
@@ -41,34 +24,48 @@ export default function Root() {
           Download
         </Button>
       </header>
-      <Table>
-        <TableHeader className='bg-[#F6F6F6]'>
-          <TableRow>
-            <TableHead className='w-[100px] text-center'>Date</TableHead>
-            <TableHead className='text-center'>Full Name</TableHead>
-            <TableHead className='text-center'>Email Address</TableHead>
-            <TableHead className='text-center'>Subscription Type</TableHead>
-            <TableHead className='text-center'>Subscription Expiring</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {invoices.map((invoice, index) => (
-            <TableRow className='text-[#686868]' key={index}>
-              <TableCell className='min-w-[120px] text-center'>
-                {invoice.date}
-              </TableCell>
-              <TableCell className='text-center'>{invoice.fullName}</TableCell>
-              <TableCell className='underline text-center text-[#1D71D4]'>
-                {invoice.email}
-              </TableCell>
-              <TableCell className='text-center'>
-                {invoice.subscriptionType}
-              </TableCell>
-              <TableCell className='text-center'> {invoice.expiry}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      
+      {isLoading ? (
+        <LoadingComponent />
+      ) : (
+        <>
+          {members.length === 0 ? (
+            <div className="h-full bg-white w-full grid place-items-center py-10">
+              <div className="flex flex-col items-center gap-4">
+                <img src="/members.svg" alt="Members Icon" width={100} height={100} />
+                <p className="text-[13px] max-w-[415px] mx-auto text-center leading-[20px] text-[#5B5971]">
+                  No members found. Members who book classes will appear here.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <Table>
+              <TableHeader className='bg-[#F6F6F6]'>
+                <TableRow>
+                  <TableHead className='text-center'>Full Name</TableHead>
+                  <TableHead className='text-center'>Email Address</TableHead>
+                  <TableHead className='text-center'>Total Bookings</TableHead>
+                  <TableHead className='text-center'>Attended Count</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {members.map((member, index) => (
+                  <TableRow className='text-[#686868]' key={member.userId || index}>
+                    <TableCell className='text-center'>{member.fullname}</TableCell>
+                    <TableCell className='underline text-center text-[#1D71D4]'>
+                      {member.email}
+                    </TableCell>
+                    <TableCell className='text-center'>
+                      {member.totalBookings}
+                    </TableCell>
+                    <TableCell className='text-center'>{member.attendedCount}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </>
+      )}
     </section>
   );
 }
