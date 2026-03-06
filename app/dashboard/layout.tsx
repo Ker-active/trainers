@@ -46,7 +46,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <PopoverTrigger>
               <AvatarName useInNavbar data={data.data} />
             </PopoverTrigger>
-            <PopoverContent className="rounded-[9px] min-[250px] flex flex-col px-[27px] gap-4" sideOffset={15} align="end">
+            {/* <PopoverContent className="rounded-[9px] min-[250px] flex flex-col px-[27px] gap-4" sideOffset={15} align="end">
               <Link className="flex flex-row gap-2  items-center  text-[#565C78]" href={Routes.profile}>
                 <User size={20} /> <span className="font-inter text-sm">My Account</span>
               </Link>
@@ -54,7 +54,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 <Bookmark size={20} />
                 <span className="font-inter text-sm">Saved Items</span>
               </Link>
-            </PopoverContent>
+            </PopoverContent> */}
           </Popover>
 
           <Sheet onOpenChange={setIsSidebarOpen} open={isSidebarOpen}>

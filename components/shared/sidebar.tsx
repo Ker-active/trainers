@@ -9,7 +9,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "nextjs-toploader/app";
-
 import { HTMLAttributes, startTransition } from "react";
 
 const links = [
@@ -18,14 +17,18 @@ const links = [
     icon: "/dashboard.svg",
   },
   {
-    label: "Schedule",
-    icon: "/message.svg",
+    label: "Profile",
+    icon: "/profile.svg",
   },
+  // {
+  //   label: "Schedule",
+  //   icon: "/message.svg",
+  // },
 
-  {
-    label: "Members",
-    icon: "/members.svg",
-  },
+  // {
+  //   label: "Members",
+  //   icon: "/members.svg",
+  // },
   // {
   //   label: "Reviews",
   //   icon: "/reviews.svg",
@@ -38,14 +41,9 @@ const links = [
   //   label: "Events",
   //   icon: "/calender.svg",
   // },
-
-  {
-    label: "Profile",
-    icon: "/members.svg",
-  },
   {
     label: "Logout",
-    icon: "/members.svg",
+    icon: "/logout.svg",
   },
 ] as const;
 
@@ -58,21 +56,25 @@ export const Sidebar = ({ className, setIsSidebarOpen }: IProps) => {
   const { data: userData, isLoading } = useGetUser();
   const queryClient = useQueryClient();
   const router = useRouter();
+
   return (
     <aside className={cn("w-full fixed left-0 overflow-y-auto min-w-[220px] max-w-[220px] h-full bg-white border-r-[0.7px] border-[#DCDCDC]", className)}>
       <ul className={"flex flex-col pt-[44px] gap-10"}>
         {links.map((item) => {
           const href = item.label === "Dashboard" ? Routes.home : `/dashboard/${item.label.toLowerCase()}`;
+          const isActive = item.label === "Dashboard" ? pathname === href : pathname.startsWith(href);
+
           const isDisabled = isLoading || !userData?.data?.fullname;
 
           return (
             <li className="flex flex-row px-10 items-center gap-4" key={item.label}>
-              <Image src={item.icon} width={27} height={27} alt={`${item.label} Icon`} style={{ opacity: isDisabled ? 0.5 : 1 }} />
-              {isDisabled ? (
+              <Image src={item.icon} width={27} height={27} alt={`${item.label} Icon`} style={{ opacity: isDisabled && item.label !== "Logout" ? 0.5 : 1 }} />
+
+              {isDisabled && item.label !== "Logout" ? (
                 <span className="text-[#E1E2E7] text-base cursor-not-allowed">{item.label}</span>
               ) : (
                 <>
-                  {item.label == "Logout" ? (
+                  {item.label === "Logout" ? (
                     <button
                       onClick={() => {
                         startTransition(async () => {
@@ -86,14 +88,11 @@ export const Sidebar = ({ className, setIsSidebarOpen }: IProps) => {
                       {item.label}
                     </button>
                   ) : (
-                    <Link onClick={() => setIsSidebarOpen?.(false)} className={cn("text-[#565C78] text-base", pathname.includes(href) && "text-brand font-medium")} href={href}>
+                    <Link onClick={() => setIsSidebarOpen?.(false)} className={cn("text-[#565C78] text-base", isActive && "text-brand font-medium")} href={href}>
                       {item.label}
                     </Link>
                   )}
                 </>
-                // <Link onClick={() => setIsSidebarOpen?.(false)} className={cn("text-[#565C78] text-base", pathname.includes(href) && "text-brand font-medium")} href={href}>
-                //   {item.label}
-                // </Link>
               )}
             </li>
           );

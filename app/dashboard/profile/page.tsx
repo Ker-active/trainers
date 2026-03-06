@@ -41,21 +41,14 @@ export type TProfile = z.infer<typeof schema>;
 const calculatePercentage = (data: TProfile) => {
   let percentage = 0;
 
-  const { personalInformation, socialMedia, services, certification, profilePhoto, media } = data;
+  const { personalInformation, socialMedia, services, profilePhoto, media } = data;
 
   const personalInfoComplete = personalInformation?.fullname && personalInformation?.phoneNumber && socialMedia?.instagram && personalInformation?.professionalSummary;
-  // if (profilePhoto) percentage += 20;
 
-  // if (personalInfoComplete) percentage += 25;
-  // if (certification) percentage += 25;
-  // if (services.length >= 1) percentage += 25;
-  // if (media.length >= 1) percentage += 25;
-
-  if (personalInfoComplete) percentage += 33.33;
-  if (services.length >= 1) percentage += 33.33;
-  if (media.length >= 1) percentage += 33.34; // To total 100%
-
-  return Math.round(percentage);
+  if (personalInfoComplete) percentage += 25;
+  if (profilePhoto) percentage += 25;
+  if (services.length >= 1) percentage += 25;
+  if (media.length >= 1) percentage += 25;
 
   return percentage;
 };
@@ -83,16 +76,16 @@ export default function Page() {
       formData.append("socialMedia", JSON.stringify(data.socialMedia));
 
       if (!!data?.certification && typeof data.certification !== "string") formData.append("certification", data.certification);
-      if (data.profilePhoto) formData.append("profilePhoto", data.profilePhoto);
 
-      // if (!!data.profilePhoto && typeof data.profilePhoto !== "string") formData.append("profilePhoto", data.profilePhoto);
+      if (data.profilePhoto && typeof data.profilePhoto !== "string") {
+        formData.append("profilePhoto", data.profilePhoto);
+      }
 
       data.services.forEach((service) => {
         formData.append("services", service);
       });
 
       data.media.forEach((media) => {
-        if (typeof media === "string") return; //for editing, do not append if it is a string
         formData.append("media", media);
       });
 
@@ -121,7 +114,7 @@ export default function Page() {
   }
 
   useEffect(() => {
-    if (userData) {
+    if (userData && !form.formState.isDirty) {
       form.reset({
         personalInformation: userData.data,
         certification: userData.data?.certification || "",
@@ -131,7 +124,7 @@ export default function Page() {
         media: userData?.data.media || [],
       });
     }
-  }, [userData]);
+  }, [userData, form.formState.isDirty, form]);
 
   const percentage = calculatePercentage(form.watch());
 
@@ -142,7 +135,7 @@ export default function Page() {
           <Info color={percentage == 100 ? "#008080" : "#996A13"} size={16} />
           <p className={cn("text-[#996A13] font-sm font-semibold", percentage == 100 && "text-primary")}>{percentage == 100 ? "Profile Completed" : "Complete your profile to continue"}</p>
         </div>
-        <Button disabled={isPending} type="submit" form="form" size="sm" className={cn("bg-[#D59C34] w-fit", percentage == 100 && "bg-primary")}>
+        <Button disabled={!form.formState.isDirty || isPending} type="submit" form="form" size="sm" className={cn("bg-[#D59C34] w-fit", percentage == 100 && "bg-primary")}>
           {percentage == 100 ? "Save" : `${percentage}%`}
         </Button>
       </header>
